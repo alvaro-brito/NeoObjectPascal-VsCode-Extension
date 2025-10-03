@@ -1,0 +1,90 @@
+{
+  "name": "neoobjectpascal",
+  "displayName": "NeoObjectPascal",
+  "description": "Syntax highlighting and execution support for NeoObjectPascal (.npas) files",
+  "version": "1.0.0",
+  "publisher": "alvarobrito",
+  "author": "Álvaro Brito",
+  "license": "MIT",
+  "icon": "images/Pascal.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alvaro-brito/NeoObjectPascal-VsCode-Extension"
+  },
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:neoobjectpascal"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "neoobjectpascal",
+        "aliases": [
+          "NeoObjectPascal",
+          "neoobjectpascal"
+        ],
+        "extensions": [
+          ".npas"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "neoobjectpascal",
+        "scopeName": "source.neoobjectpascal",
+        "path": "./syntaxes/neoobjectpascal.tmLanguage.json",
+        "embeddedLanguages": {
+          "meta.embedded.asm": "source.asm"
+        }
+      }
+    ],
+    "configuration": {
+      "title": "NeoObjectPascal",
+      "properties": {
+        "neoobjectpascal.jarPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the directory containing neoobjectpascal-1.0-SNAPSHOT-jar-with-dependencies.jar"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "neoobjectpascal.run",
+        "title": "Run NeoObjectPascal File"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "resourceExtname == .npas",
+          "command": "neoobjectpascal.run",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "when": "resourceExtname == .npas",
+          "command": "neoobjectpascal.run",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "prepare": "js-yaml syntaxes/neoobjectpascal.tmLanguage.yaml > syntaxes/neoobjectpascal.tmLanguage.json",
+    "clean": "rm -f syntaxes/neoobjectpascal.tmLanguage.json",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "js-yaml": "^3.13.1",
+    "vsce": "^2.7.0"
+  }
+}

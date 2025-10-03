@@ -1,0 +1,582 @@
+$schema: 'https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json'
+name: NeoObjectPascal
+patterns:
+    -
+        include: '#comment'
+    -
+        include: '#program'
+    -
+        include: '#unit'
+    -
+        include: '#interface'
+    -
+        include: '#implementation'
+    -
+        include: '#unit-main'
+    -
+        include: '#uses'
+    -
+        include: '#label'
+    -
+        include: '#function-declaration'
+    -
+        include: '#function-body'
+    -
+        include: '#function-mod'
+    -
+        include: '#asm'
+    -
+        name: meta.program.end.objectpascal
+        match: '(?i)\b(end)\s*\.'
+        captures:
+            '1':
+                name: keyword.control.objectpascal
+    -
+        include: '#type-declaration'
+    -
+        include: '#declaration'
+    -
+        include: '#keywords'
+repository:
+    comment:
+        patterns:
+            -
+                name: comment.block.objectpascal
+                begin: '\(\*'
+                end: '\*\)'
+            -
+                name: comment.block.objectpascal
+                begin: '\{'
+                end: '\}'
+            -
+                name: comment.line.objectpascal
+                match: '//.*$'
+    program:
+        name: meta.program.objectpascal
+        begin: '(?i)\b(program)\b'
+        beginCaptures:
+            '1':
+                name: storage.type.objectpascal
+        end: ;
+        patterns:
+            -
+                include: '#comment'
+            -
+                name: entity.name.function.objectpascal
+                match: '(?i)([_a-z][0-9_a-z]*)'
+            -
+                include: '#parameter-list'
+    unit:
+        name: meta.unit.objectpascal
+        begin: '(?i)\b(unit)\b'
+        beginCaptures:
+            '1':
+                name: storage.type.objectpascal
+        end: ;
+        patterns:
+            -
+                include: '#comment'
+            -
+                name: entity.name.function.objectpascal
+                match: '(?i)([_a-z][0-9_a-z]*)'
+    interface:
+        name: meta.interface.objectpascal
+        begin: '(?i)\b(interface)\b'
+        beginCaptures:
+            '1':
+                name: keyword.control.objectpascal
+        end: '(?i)(?=\b(implementation)\b)'
+        endCaptures:
+            '1':
+                name: keyword.control.objectpascal
+        patterns:
+            -
+                include: '#comment'
+            -
+                include: '#uses'
+            -
+                include: '#label'
+            -
+                include: '#function-declaration'
+            -
+                include: '#function-mod'
+            -
+                include: '#type-declaration'
+            -
+                include: '#declaration'
+    implementation:
+        name: meta.implementation.objectpascal
+        begin: '(?i)\b(implementation)\b'
+        beginCaptures:
+            '1':
+                name: keyword.control.objectpascal
+        end: '(?i)(?=\b(initialization|end)\b)'
+        endCaptures:
+            '1':
+                name: keyword.control.objectpascal
+        patterns:
+            -
+                include: '#comment'
+            -
+                include: '#uses'
+            -
+                include: '#label'
+            -
+                include: '#function-declaration'
+            -
+                include: '#function-body'
+            -
+                include: '#function-mod'
+            -
+                include: '#type-declaration'
+            -
+                include: '#declaration'
+    unit-main:
+        begin: '(?i)\b(initialization)\b'
+        beginCaptures:
+            '1':
+                name: keyword.control.objectpascal
+        end: '(?i)\b(end)\s*\.'
+        endCaptures:
+            '1':
+                name: keyword.control.objectpascal
+        patterns:
+            -
+                include: '#comment'
+            -
+                include: '#asm'
+            -
+                name: keyword.control.objectpascal
+                match: '(?i)\b(finalization)\b'
+            -
+                include: '#statement'
+    uses:
+        name: meta.uses.objectpascal
+        begin: '(?i)\b(uses)\b'
+        beginCaptures:
+            '1':
+                name: keyword.control.declaration.objectpascal
+        end: ;
+        patterns:
+            -
+                include: '#comment'
+            -
+                name: string.unquoted.objectpascal
+                match: '(?i)([_a-z][0-9_a-z]*)'
+    label:
+        name: meta.label.objectpascal
+        begin: '(?i)\b(label)\b'
+        beginCaptures:
+            '1':
+                name: storage.type.objectpascal
+        end: ;
+        patterns:
+            -
+                include: '#comment'
+            -
+                name: string.unquoted.objectpascal
+                match: '(?i)([_a-z][0-9_a-z]*)'
+    function-declaration:
+        name: meta.function.objectpascal
+        begin: '(?i)\b(constructor|destructor|procedure|function|class\s+function|class\s+procedure)\b'
+        beginCaptures:
+            '1':
+                name: storage.type.objectpascal
+        end: '(?=;)'
+        patterns:
+            -
+                include: '#comment'
+            -
+                match: '(?i)([_a-z][0-9_a-z]*)\s*\.'
+                captures:
+                    '1':
+                        name: entity.name.type.objectpascal
+            -
+                name: entity.name.function.objectpascal
+                match: '(?i)([_a-z][0-9_a-z]*)'
+            -
+                include: '#parameter-list'
+            -
+                begin: ':'
+                end: '(?=;)'
+                patterns:
+                    -
+                        include: '#type'
+    function-body:
+        name: meta.body.objectpascal
+        begin: '(?i)\b(begin)\b'
+        beginCaptures:
+            '1':
+                name: keyword.control.objectpascal
+        end: '(?i)\b(end)\s*[;|\.]'
+        endCaptures:
+            '1':
+                name: keyword.control.objectpascal
+        patterns:
+            -
+                include: '#comment'
+            -
+                include: '#asm'
+            -
+                include: '#statement'
+    function-mod:
+        begin: '(?i)\b(alias|assembler|cdecl|external|forward|inline|interrupt|objectpascal|popstack|public|register|saveregisters|safecall|stdcall)\b'
+        beginCaptures:
+            '1':
+                name: keyword.objectpascal
+        end: ;
+        patterns:
+            -
+                name: keyword.objectpascal
+                match: '(?i)\b(name)\b'
+            -
+                include: '#expression'
+    asm:
+        contentName: meta.embedded.asm
+        begin: '(?i)(asm)'
+        beginCaptures:
+            '1':
+                name: keyword.control.objectpascal
+        end: '(?i)\b(end)\b([^;]*);'
+        endCaptures:
+            '1':
+                name: keyword.control.objectpascal
+            '2':
+                patterns:
+                    -
+                        include: '#strings'
+        patterns: []
+    type-declaration:
+        patterns:
+            -
+                include: '#comment'
+            -
+                name: keyword.control.objectpascal
+                match: '(?i)\btype\b'
+            -
+                name: meta.type.alias.objectpascal
+                begin: '(?i)\b([_a-z][0-9_a-z]*)\s*(?==)'
+                beginCaptures:
+                    '1':
+                        name: entity.name.type.objectpascal
+                end: ;
+                patterns:
+                    -
+                        begin: '='
+                        end: '(?=;)'
+                        patterns:
+                            -
+                                include: '#type'
+    declaration:
+        patterns:
+            -
+                include: '#comment'
+            -
+                name: keyword.control.objectpascal
+                match: '(?i)\b(const|type|var)\b'
+            -
+                name: meta.declaration.objectpascal
+                begin: '(?i)\b([_a-z][0-9_a-z]*)\b'
+                beginCaptures:
+                    '1':
+                        name: variable.other.objectpascal
+                end: '(;|,|(?=\)))'
+                patterns:
+                    -
+                        include: '#comment'
+                    -
+                        begin: ':'
+                        end: '(?=[;=)])'
+                        patterns:
+                            -
+                                include: '#type'
+                    -
+                        name: meta.expression.objectpascal
+                        match: '=([^;\)]*)'
+                        captures:
+                            '1':
+                                patterns:
+                                    -
+                                        include: '#comment'
+                                    -
+                                        include: '#expression'
+    parameter-list:
+        name: meta.parameterlist.objectpascal
+        begin: \(
+        end: \)
+        patterns:
+            -
+                include: '#comment'
+            -
+                include: '#declaration'
+    type:
+        patterns:
+            -
+                include: '#comment'
+            -
+                include: '#class-declaration'
+            -
+                include: '#record-declaration'
+            -
+                include: '#function-declaration'
+            -
+                include: '#keywords'
+            -
+                begin: '\['
+                end: '\]'
+                patterns:
+                    -
+                        include: '#expression'
+            -
+                name: entity.name.type.objectpascal
+                match: '(?i)\b[_a-z][0-9_a-z]*\b'
+    record-declaration:
+        begin: '(?i)\b(record)\b'
+        beginCaptures:
+            '1':
+                name: keyword.control.objectpascal
+        end: '(?i)\b(end)\b'
+        endCaptures:
+            '1':
+                name: keyword.control.objectpascal
+        patterns:
+            -
+                include: '#comment'
+            -
+                begin: '(?i)\b(case)\b'
+                beginCaptures:
+                    '1':
+                        name: keyword.control.objectpascal
+                end: '(?i)(?=\bend\b)'
+                patterns:
+                    -
+                        begin: '(?i)\b(of)\b'
+                        beginCaptures:
+                            '1':
+                                name: keyword.control.objectpascal
+                        end: '(?i)(?=\bend\b)'
+                        patterns:
+                            -
+                                begin: '(?i):\s*\('
+                                end: '(?i)\)\s*'
+                                patterns:
+                                    -
+                                        include: '#declaration'
+                            -
+                                include: '#expression'
+                    -
+                        name: entity.name.type.objectpascal
+                        match: '(?i)\b([_a-z][0-9_a-z]*)\b(?!\s*:)'
+                    -
+                        include: '#identifier'
+            -
+                include: '#declaration'
+    class-declaration:
+        begin: '(?i)\b(class)\b(?:\s*\((.*?)\))?'
+        beginCaptures:
+            '1':
+                name: keyword.control.objectpascal
+            '2':
+                name: entity.name.type.objectpascal
+        end: '(?i)\b(end)\b'
+        endCaptures:
+            '1':
+                name: keyword.control.objectpascal
+        patterns:
+            -
+                include: '#comment'
+            -
+                name: storage.type.method.objectpascal
+                match: '(?i)(private|public|protected|published|strict\s+private|strict\s+protected|virtual|abstract|override|overload|class\s+function|class\s+procedure|class\s+var|class\s+property|class\s+constructor|class\s+destructor|property|constructor|destructor|function|procedure|var|type|const|class\s+procedure)\b'
+            -
+                include: '#function-declaration'
+            -
+                include: '#property'
+            -
+                include: '#declaration'
+    property:
+        name: meta.property.objectpascal
+        begin: '(?i)\b(property)\b'
+        beginCaptures:
+            '1':
+                name: keyword.objectpascal
+        end: ;
+        patterns:
+            -
+                match: '(?i)\b([_a-z][0-9_a-z]*)\s*:\s*([^;]*)'
+                captures:
+                    '1':
+                        name: variable.other.objectpascal
+                    '2':
+                        patterns:
+                            -
+                                match: '(?i)\b(read|write|stored)\s+([_a-z][0-9_a-z]*)\b'
+                                captures:
+                                    '1':
+                                        name: keyword.objectpascal
+                                    '2':
+                                        patterns:
+                                            -
+                                                include: '#keywords'
+                                            -
+                                                name: entity.name.function.objectpascal
+                                                match: '.*'
+                            -
+                                match: '(?i)\b(default)\s+(((?!\b(?:read|write|stored|;)\b).)*)'
+                                captures:
+                                    '1':
+                                        name: keyword.objectpascal
+                                    '2':
+                                        patterns:
+                                            -
+                                                include: '#expression'
+                            -
+                                name: entity.name.class.objectpascal
+                                match: '(?i)\b([_a-z][0-9_a-z]*)\b'
+    statement:
+        patterns:
+            -
+                include: '#statement-compound'
+            -
+                include: '#expression'
+    expression:
+        patterns:
+            -
+                name: constant.character.objectpascal
+                match: '(?i)#[0-9]+'
+            -
+                name: constant.numeric.objectpascal
+                match: '(?i)\$[0-9a-f]+\b'
+            -
+                name: constant.numeric.objectpascal
+                match: '(?i)\b[0-9]+(\.[0-9]+)?(e(\+|\-)?[0-9]+)?\b'
+            -
+                include: '#strings'
+            -
+                include: '#keywords'
+            -
+                include: '#identifier'
+    statement-compound:
+        name: meta.section.objectpascal
+        begin: '(?i)\b(begin|case|try)\b'
+        beginCaptures:
+            '1':
+                name: keyword.control.objectpascal
+        end: '(?i)\b(end)\b'
+        endCaptures:
+            '1':
+                name: keyword.control.objectpascal
+        patterns:
+            -
+                include: '#comment'
+            -
+                include: '#asm'
+            -
+                include: '#statement'
+    identifier:
+        patterns:
+            -
+                match: '(T[A-Z]{1}[A-Za-z0-9]*)'
+                captures:
+                    '1':
+                        name: entity.name.class.objectpascal
+            -
+                match: '(I[A-Z]{1}[A-Za-z0-9]*)'
+                captures:
+                    '1':
+                     name: entity.name.interface.objectpascal
+            -
+                match: '(?i)([_a-z][0-9_a-z]*)\s*\('
+                captures:
+                    '1':
+                        name: entity.name.function.objectpascal
+            -
+                name: variable.other.objectpascal
+                match: '(?i)\b([_a-z][0-9_a-z]*)\b(?!\s*\.)'
+            -
+                name: variable.other.objectpascal
+                match: '(?i)\b([_a-z][0-9_a-z]*)\b'
+
+
+    keywords:
+        patterns:
+            -
+                name: entity.name.type.neoobjectpascal
+                match: '(?i)\b(string|Integer|Boolean|Real|Object)\b'
+            -
+                name: keyword.control.neoobjectpascal
+                match: '(?i)\b(begin|end|break|continue|do|downto|else|for|goto|if|repeat|then|until|while|with|to|return)\b'
+                # formatted asm|begin|case|end
+            -
+                name: constant.language.neoobjectpascal
+                match: '(?i)\b(true|false|nil)\b'
+            -
+                name: support.function.builtin.neoobjectpascal
+                match: '(?i)\b(WriteLn|ReadLn|showMenu)\b'
+            -
+                name: support.function.json.neoobjectpascal
+                match: '(?i)\b(JSON\.parse)\b'
+            -
+                name: support.function.csv.neoobjectpascal
+                match: '(?i)\b(CSV\.parse)\b'
+            -
+                name: keyword.other.neoobjectpascal
+                match: '(?i)\b(into|java)\b'
+            -
+                name: keyword.operator.pipe.neoobjectpascal
+                match: '\|\>'
+            -
+                name: keyword.operator.assignment.neoobjectpascal
+                match: ':='
+            -
+                name: keyword.operator.comparison.neoobjectpascal
+                match: '(<>|<=|>=|=|<|>)'
+            -
+                name: keyword.operator.arithmetic.neoobjectpascal
+                match: '(\+|\-|\*|\/)'
+            -
+                name: keyword.neoobjectpascal
+                match: '(?i)\b(absolute|and|array|const|constructor|destructor|div|file|function|implementation|in|inherited|inline|interface|label|mod|not|object|of|on|operator|or|packed|procedure|program|record|reintroduce|self|set|shl|shr|type|unit|uses|var|xor|as|class|except|exports|finalization|finally|initialization|is|library|property|raise|threadvar|try|dispose|exit|new)\b'
+            -
+                name: keyword.neoobjectpascal
+                match: '(?i)\b(result)\b'
+            -
+                name: meta.embedded.block.java.neoobjectpascal
+                begin: '(?i)\bjava\s*:\s*\('
+                end: '\}'
+                beginCaptures:
+                    '0':
+                        name: keyword.other.java.neoobjectpascal
+                endCaptures:
+                    '0':
+                        name: punctuation.section.embedded.end.neoobjectpascal
+                patterns:
+                    -
+                        include: '#comment'
+                    -
+                        name: meta.embedded.java.code.neoobjectpascal
+                        begin: '\{'
+                        end: '(?=\})'
+                        patterns:
+                            -
+                                name: source.java.embedded.neoobjectpascal
+                                match: '.*'
+    strings:
+        patterns:
+            -
+                name: string.quoted.single.neoobjectpascal
+                begin: "'"
+                end: "'(?!')"
+                patterns:
+                    -
+                        name: constant.character.escape.neoobjectpascal
+                        match: "''"
+            -
+                name: string.quoted.double.neoobjectpascal
+                begin: '"'
+                end: '"'
+                patterns:
+                    -
+                        name: constant.character.escape.neoobjectpascal
+                        match: '\\.'
+scopeName: source.neoobjectpascal

@@ -1,0 +1,97 @@
+// Exemplo completo de NeoObjectPascal
+// Demonstra todas as palavras reservadas e funcionalidades
+
+uses System.Utils, Data.JSON;
+
+var contador: Integer;
+var nome: String;
+var ativo: Boolean;
+var preco: Real;
+var dados: Object;
+
+function somar(a: Integer, b: Integer): Integer
+begin
+    return a + b;
+end;
+
+function calcular(x: Real): Real
+begin
+    var resultado: Real;
+    resultado := x * 2.5;
+    return resultado;
+end;
+
+function processar(): String
+begin
+    // Exemplo de bloco Java embutido
+    var resultado: String;
+    resultado := java: (nome) {
+        return nome.toUpperCase();
+    };
+    return resultado;
+end;
+
+begin
+    // Entrada e saída
+    WriteLn('Bem-vindo ao NeoObjectPascal!');
+    WriteLn('Digite seu nome:');
+    ReadLn(nome);
+    
+    // Atribuição
+    contador := 0;
+    ativo := true;
+    preco := 99.99;
+    
+    // Estrutura condicional
+    if ativo then
+        WriteLn('Sistema ativo')
+    else
+        WriteLn('Sistema inativo');
+    
+    // Loop while
+    while contador < 5 do
+    begin
+        WriteLn('Contador: ', contador);
+        contador := contador + 1;
+    end;
+    
+    // Loop for
+    for contador := 1 to 10 do
+        WriteLn('Iteração: ', contador);
+    
+    // Operadores de comparação
+    if preco > 50.0 then
+        WriteLn('Preço alto');
+    
+    if preco <= 100.0 then
+        WriteLn('Preço aceitável');
+    
+    if nome <> '' then
+        WriteLn('Nome válido');
+    
+    // Operadores aritméticos
+    contador := 10 + 5;
+    contador := contador - 3;
+    contador := contador * 2;
+    contador := contador / 4;
+    
+    // Menu interativo
+    showMenu('Opção 1', 'Opção 2', 'Opção 3');
+    
+    // Parse JSON
+    JSON.parse('{"nome": "João", "idade": 30}') into dados;
+    
+    // Parse CSV
+    CSV.parse('nome,idade\nJoão,30\nMaria,25') into dados;
+    
+    // Pipe operator
+    var resultado: Integer;
+    resultado := 10 |> somar(5);
+    
+    // Chamada de função
+    WriteLn('Soma: ', somar(10, 20));
+    WriteLn('Cálculo: ', calcular(5.5));
+    WriteLn('Processado: ', processar());
+    
+    WriteLn('Programa finalizado!');
+end.

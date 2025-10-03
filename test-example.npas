@@ -1,0 +1,6 @@
+program HelloWorld;
+
+begin
+  writeln('Hello from NeoObjectPascal!');
+  writeln('This is a test file.');
+end.
